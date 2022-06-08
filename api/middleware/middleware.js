@@ -19,10 +19,30 @@ function validateUserId(req, res, next) {
 }
 
 function validateUser(req, res, next) {
-  
+  const trimmed = req.body.name;
+  if (typeof trimmed !== 'string' || trimmed.trim() == null || trimmed.trim() === '') {
+    res.status(400).json({message: "invalid name"});
+    return;
+  } 
+  req.validName = trimmed.trim();
+  next();
+}
+
+function uniqueUsername(req, res, next) {
+Users.get().then(item => {
+  item.forEach(user => {
+    if(user.name === req.validName) {
+      res.status(400).json({message: "user already exists"});
+      return;
+    }
+    return;
+  })
+})
+next();
 }
 
 function validatePost(req, res, next) {
+
 }
 
 // do not forget to expose these functions to other modules
@@ -31,5 +51,6 @@ logger,
 validateUserId,
 validateUser,
 validatePost,
+uniqueUsername,
 
 }

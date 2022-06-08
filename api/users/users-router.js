@@ -4,7 +4,7 @@ const express = require('express');
 const Users = require('./users-model');
 const Posts = require('../posts/posts-model');
 // The middleware functions also need to be required
-const {logger, validateUserId, validatePost, validateUser} = require('../middleware/middleware');
+const {logger, validateUserId, validatePost, validateUser, uniqueUsername} = require('../middleware/middleware');
 
 const router = express.Router();
 
@@ -16,17 +16,19 @@ router.get('/', logger, (req, res) => {
 });
 
 router.get('/:id', validateUserId, (req, res) => {
- res.status(200).json(req.validUser);
+  res.status(200).json(req.validUser);
   // RETURN THE USER OBJECT
   // this needs a middleware to verify user id
 });
 
-router.post('/', (req, res) => {
+router.post('/', validateUser, uniqueUsername, (req, res, next) => {
+  const newUser = {name: req.validName};
+  Users.insert(newUser).then(result => {
+    res.status(201).json(result);
+  }).catch(error => {next(error)});
 });
 
-router.put('/:id', (req, res) => {
-
-  
+router.put('/:id',  (req, res) => {
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
