@@ -22,19 +22,24 @@ router.get('/:id', validateUserId, (req, res) => {
 });
 
 router.post('/', validateUser, uniqueUsername, (req, res, next) => {
-  const newUser = {name: req.validName};
-  Users.insert(newUser).then(result => {
+  Users.insert(req.newUser).then(result => {
     res.status(201).json(result);
   }).catch(error => {next(error)});
 });
 
-router.put('/:id',  (req, res) => {
+router.put('/:id', validateUserId, validateUser, (req, res) => {
+ Users.update(req.validUser.id, req.newUser).then(result => {
+   res.status(200).json(result);
+ });
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateUserId, (req, res) => {
+Users.remove(req.validUser.id).then(() => {
+  res.status(200).json(req.validUser);
+})
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
 });

@@ -15,7 +15,7 @@ server.get('/', (req, res) => {
 
 
 server.use((error, req, res, next) => {
-res.status(error.status || 500).json({message: error.message});
+res.status(error.status || 500).json({message: error.message, stack: error.stack});
 })
 
 module.exports = server;

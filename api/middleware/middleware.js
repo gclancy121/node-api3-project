@@ -12,6 +12,7 @@ function validateUserId(req, res, next) {
   .then(result => {
     if (result == null) {
       res.status(400).json({message: "User not found"});
+      return;
     }
     req.validUser = result;
     next();
@@ -24,7 +25,7 @@ function validateUser(req, res, next) {
     res.status(400).json({message: "invalid name"});
     return;
   } 
-  req.validName = trimmed.trim();
+  req.newUser = {name: trimmed.trim()};
   next();
 }
 
@@ -42,7 +43,7 @@ next();
 }
 
 function validatePost(req, res, next) {
-
+next();
 }
 
 // do not forget to expose these functions to other modules
