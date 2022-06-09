@@ -44,12 +44,20 @@ Users.remove(req.validUser.id).then(() => {
   // this needs a middleware to verify user id
 });
 
-router.get('/:id/posts', (req, res) => {
+router.get('/:id/posts', validateUserId, (req, res) => {
+  Users.getUserPosts(req.validUser.id).then(result => {
+   res.status(200).json(result);
+  })
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts',validateUserId, validatePost, (req, res) => {
+  console.log(req.validPost, req.validUser.id);
+  Posts.insert({text: req.validPost.text, user_id: req.validUser.id})
+  .then(result => {
+    res.status(201).json(result);
+  })
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid

@@ -43,7 +43,12 @@ next();
 }
 
 function validatePost(req, res, next) {
-next();
+  if(typeof req.body.text !== "string" || req.body.text.trim()=== '') {
+    res.status(400).json({message: "invalid request body"});
+    return;
+  }
+  req.validPost = {text: req.body.text.trim()};
+  next();
 }
 
 // do not forget to expose these functions to other modules
