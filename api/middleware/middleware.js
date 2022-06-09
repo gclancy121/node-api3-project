@@ -11,7 +11,7 @@ function validateUserId(req, res, next) {
   Users.getById(req.params.id)
   .then(result => {
     if (result == null) {
-      res.status(400).json({message: "User not found"});
+      res.status(404).json({message: "User not found"});
       return;
     }
     req.validUser = result;
@@ -22,7 +22,7 @@ function validateUserId(req, res, next) {
 function validateUser(req, res, next) {
   const trimmed = req.body.name;
   if (typeof trimmed !== 'string' || trimmed.trim() == null || trimmed.trim() === '') {
-    res.status(400).json({message: "invalid name"});
+    res.status(400).json({message: "missing required name"});
     return;
   } 
   req.newUser = {name: trimmed.trim()};
@@ -44,7 +44,7 @@ next();
 
 function validatePost(req, res, next) {
   if(typeof req.body.text !== "string" || req.body.text.trim()=== '') {
-    res.status(400).json({message: "invalid request body"});
+    res.status(400).json({message: "missing required text"});
     return;
   }
   req.validPost = {text: req.body.text.trim()};
